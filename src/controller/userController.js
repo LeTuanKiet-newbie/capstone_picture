@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"; //dung de query
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { createToken } from "../config/jwt.js";
+import { checkToken, createToken } from "../config/jwt.js";
 
 const prisma = new PrismaClient();
 
@@ -73,4 +73,32 @@ const loginUser = async (req, res) => {
   res.status(200).send("Login successfully!");
 };
 
-export { createUser, loginUser };
+const updateUser = async (req, res) => {
+  try {
+    const { token } = await req.headers;
+    const checkValidToken = await validator.isJWT(token);
+    if (!checkValidToken) {
+      return;
+    }
+    const checkLegitToken = await checkToken(token);
+    if (!checkLegitToken) {
+      return;
+    }
+    const user = await checkLegitToken.data;
+    const updateInfo = await req.body;
+    const updatedUser = await { ...user, ...updateInfo };
+    console.log(updatedUser);
+    await prisma.users.update({
+      data: { user_fullname: "le tuan kiet" },
+      where: {
+        user_id: updatedUser.user_id,
+      },
+    });
+    res.status(200).send("Updated completed!");
+  } catch (e) {
+    console.log(e);
+    res.status(401).send({ message: "This is not a valid token !" });
+  }
+};
+
+export { createUser, loginUser, updateUser };
