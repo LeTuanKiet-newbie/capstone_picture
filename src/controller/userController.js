@@ -43,7 +43,9 @@ const createUser = async (req, res) => {
       res.status(400).send("Email have already taken!");
     }
   } catch (e) {
-    res.status(400).send({ message: "Bad request" });
+    // res.status(400).send({ message: "Bad request" });
+    console.log(e)
+    res.send(e)
   }
 };
 
