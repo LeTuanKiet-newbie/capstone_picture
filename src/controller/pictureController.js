@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import validator from "validator";
-import { checkToken } from "../config/jwt.js";
+import { checkToken, decodeToken } from "../config/jwt.js";
 
 const prisma = new PrismaClient();
 
