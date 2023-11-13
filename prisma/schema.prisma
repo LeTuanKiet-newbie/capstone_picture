@@ -14,9 +14,23 @@ model comments {
   content             String   @db.VarChar(255)
   comment_create_date DateTime @db.Timestamp(0)
   users               users?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
-  image               images?  @relation(fields: [img_id], references: [img_id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
+  images              images?  @relation(fields: [img_id], references: [img_id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
 
   @@index([img_id], map: "img_id")
+  @@index([user_id], map: "user_id")
+}
+
+model images {
+  img_id          Int          @id @default(autoincrement())
+  user_id         Int?
+  img_create_date DateTime     @db.Timestamp(0)
+  img_title       String?      @db.VarChar(255)
+  img_url         String       @db.VarChar(255)
+  img_description String       @db.VarChar(255)
+  comments        comments[]
+  users           users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "images_ibfk_1")
+  save_image      save_image[]
+
   @@index([user_id], map: "user_id")
 }
 
@@ -26,7 +40,7 @@ model save_image {
   img_id        Int?
   user_id       Int?
   users         users?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "save_image_ibfk_1")
-  image         images?  @relation(fields: [img_id], references: [img_id], onDelete: NoAction, onUpdate: NoAction, map: "save_image_ibfk_2")
+  images        images?  @relation(fields: [img_id], references: [img_id], onDelete: NoAction, onUpdate: NoAction, map: "save_image_ibfk_2")
 
   @@index([img_id], map: "img_id")
   @@index([user_id], map: "user_id")
@@ -44,18 +58,4 @@ model users {
   comments      comments[]
   images        images[]
   save_image    save_image[]
-}
-
-model images {
-  img_id          Int          @id @default(autoincrement())
-  user_id         Int?
-  img_create_date DateTime     @db.Timestamp(0)
-  img_title       String?      @db.VarChar(255)
-  img_url         String       @db.VarChar(255)
-  img_description String       @db.VarChar(255)
-  comments        comments[]
-  users           users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "images_ibfk_1")
-  save_image      save_image[]
-
-  @@index([user_id], map: "user_id")
 }

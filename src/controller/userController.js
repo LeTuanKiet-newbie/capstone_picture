@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"; //dung de query
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { checkToken, createToken } from "../config/jwt.js";
+import { checkToken, createToken, decodeToken } from "../config/jwt.js";
 
 const prisma = new PrismaClient();
 
@@ -76,18 +76,14 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { token } = await req.headers;
-    const checkValidToken = await validator.isJWT(token);
-    if (!checkValidToken) {
-      return;
-    }
-    const checkLegitToken = await checkToken(token);
+
+    const checkLegitToken = checkToken(token);
     if (!checkLegitToken) {
-      return;
+      return res.status(401).send({ message: "Unauthorized!" });
     }
-    const user = await checkLegitToken.data;
+    const user = decodeToken(token).data;
     const updateInfo = await req.body;
     const updatedUser = await { ...user, ...updateInfo };
-    console.log(updatedUser);
     await prisma.users.update({
       data: { user_fullname: "le tuan kiet" },
       where: {
@@ -96,9 +92,43 @@ const updateUser = async (req, res) => {
     });
     res.status(200).send("Updated completed!");
   } catch (e) {
-    console.log(e);
-    res.status(401).send({ message: "This is not a valid token !" });
+    res.status(500).send({ message: "No Connection!" });
   }
 };
 
-export { createUser, loginUser, updateUser };
+const getUserInfo = async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const tokenValid = checkToken(token);
+    if (!tokenValid) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const img_id = Number(req.params.img_id);
+
+    const image = await prisma.images.findFirst({
+      where: {
+        img_id,
+      },
+      include: {
+        users: {
+          select: {
+            user_fullname: true,
+            user_email: true,
+            user_phone: true,
+            user_avatar: true,
+          },
+        },
+      },
+    });
+    if (!image) {
+      return res.status(404).send({ message: "Not Found!" });
+    }
+    const user = image.users;
+
+    res.status(200).send(user);
+  } catch {
+    res.status(500).send({ message: "No internet!" });
+  }
+};
+
+export { createUser, loginUser, updateUser, getUserInfo };

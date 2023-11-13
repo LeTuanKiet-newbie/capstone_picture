@@ -13,15 +13,16 @@ const addPicture = async (req, res) => {
     if (!checkLegitToken || !checkValidToken) {
       return;
     }
+
+    console.log(decodeToken(token));
+
     const user = await checkToken(token).data;
 
     const { img_url, img_title, img_description } = await req.body;
-    const time = new Date();
-    const img_create_date = time.toISOString();
 
     const newPicture = {
       user_id: user.user_id,
-      img_create_date,
+      img_create_date: new Date(),
       img_title,
       img_url,
       img_title,
