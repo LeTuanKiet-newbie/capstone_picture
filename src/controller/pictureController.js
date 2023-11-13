@@ -7,14 +7,11 @@ const prisma = new PrismaClient();
 const addPicture = async (req, res) => {
   try {
     const { token } = await req.headers;
-    const checkLegitToken = await validator.isJWT(token);
-    const checkValidToken = await checkToken(token);
+    const checkValidToken = checkToken(token);
 
     if (!checkLegitToken || !checkValidToken) {
       return;
     }
-
-    console.log(decodeToken(token));
 
     const user = await checkToken(token).data;
 

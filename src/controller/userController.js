@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
       },
     });
     if (!checkEmail) {
-      const newPassword = await bcrypt.hashSync(user_password, 10);
+      const newPassword = bcrypt.hashSync(user_password, 10);
       if (validator.isEmpty(user_role)) {
         user_role = "user";
       }
@@ -43,34 +43,35 @@ const createUser = async (req, res) => {
       res.status(400).send("Email have already taken!");
     }
   } catch (e) {
-    res.status(400).send({ message: "Bad request" });
+    res.status(500).send({ message: "Bad request" });
   }
 };
 
 const loginUser = async (req, res) => {
-  const { user_email, user_password } = await req.body;
-  const user = await prisma.users.findFirst({
-    where: {
-      user_email,
-    },
-  });
-  if (!user) {
-    res.status(404).send({ message: "Wrong email!" });
-    return;
-  }
+  try {
+    const { user_email, user_password } = await req.body;
+    const user = await prisma.users.findFirst({
+      where: {
+        user_email,
+      },
+    });
+    if (!user) {
+      res.status(404).send({ message: "Wrong email!" });
+      return;
+    }
 
-  const comparePass = await bcrypt.compareSync(
-    user_password,
-    user.user_password
-  );
-  if (!comparePass) {
-    res.status(404).send({ message: "Wrong password!" });
-    return;
-  }
+    const comparePass = bcrypt.compareSync(user_password, user.user_password);
+    if (!comparePass) {
+      res.status(404).send({ message: "Wrong password!" });
+      return;
+    }
 
-  const token = createToken(user);
-  res.setHeader("token", token);
-  res.status(200).send("Login successfully!");
+    const token = createToken(user);
+    res.setHeader("token", token);
+    res.status(200).send("Login successfully!");
+  } catch (e) {
+    res.status(500).send({ message: "Bad Connection!" });
+  }
 };
 
 const updateUser = async (req, res) => {
@@ -98,7 +99,7 @@ const updateUser = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    const { token } = req.headers;
+    const { token } = await req.headers;
     const tokenValid = checkToken(token);
     if (!tokenValid) {
       return res.status(401).send({ message: "Unauthorized!" });
