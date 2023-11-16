@@ -221,7 +221,6 @@ const addPicture = async (req, res) => {
 
     const file = await req.file;
     const { img_title, img_description } = await req.body;
-    console.log(file);
 
     const newPicture = {
       user_id: user.user_id,

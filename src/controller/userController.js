@@ -90,7 +90,6 @@ const updateUser = async (req, res) => {
       },
     });
     const updatedUser = await { ...user, ...updateInfo };
-    console.log(updatedUser);
     await prisma.users.update({
       data: { ...updatedUser },
       where: {
