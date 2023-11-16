@@ -11,7 +11,6 @@ const createToken = (data) => {
 const checkToken = (data) => {
   return jwt.verify(data, config.secret_string);
 };
-
 const decodeToken = (data) => {
   return jwt.decode(data);
 };
