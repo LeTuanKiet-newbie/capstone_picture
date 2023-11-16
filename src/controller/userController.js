@@ -81,11 +81,18 @@ const updateUser = async (req, res) => {
     if (!token || checkTokenExist(req) === 401) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
-    const user = decodeToken(token).data;
+    const { user_id } = decodeToken(token).data;
+
     const updateInfo = await req.body;
+    const user = await prisma.users.findFirst({
+      where: {
+        user_id,
+      },
+    });
     const updatedUser = await { ...user, ...updateInfo };
+    console.log(updatedUser);
     await prisma.users.update({
-      data: { user_fullname: "le tuan kiet" },
+      data: { ...updatedUser },
       where: {
         user_id: updatedUser.user_id,
       },
