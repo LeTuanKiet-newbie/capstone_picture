@@ -19,7 +19,7 @@ CREATE TABLE `comments` (
   KEY `img_id` (`img_id`),
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`img_id`) REFERENCES `images` (`img_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `images`;
 CREATE TABLE `images` (
@@ -32,7 +32,7 @@ CREATE TABLE `images` (
   PRIMARY KEY (`img_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `save_image`;
 CREATE TABLE `save_image` (
@@ -45,7 +45,7 @@ CREATE TABLE `save_image` (
   KEY `img_id` (`img_id`),
   CONSTRAINT `save_image_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `save_image_ibfk_2` FOREIGN KEY (`img_id`) REFERENCES `images` (`img_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -58,14 +58,33 @@ CREATE TABLE `users` (
   `user_avatar` varchar(255) NOT NULL,
   `user_role` varchar(50) NOT NULL DEFAULT (_utf8mb4'user'),
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `comments` (`comment_id`, `user_id`, `img_id`, `content`, `comment_create_date`) VALUES
+(1, 2, 5, 'test comment', '2023-11-15 09:02:01');
+INSERT INTO `comments` (`comment_id`, `user_id`, `img_id`, `content`, `comment_create_date`) VALUES
+(2, 2, 5, 'this is a test comment', '2023-11-15 14:05:17');
+INSERT INTO `comments` (`comment_id`, `user_id`, `img_id`, `content`, `comment_create_date`) VALUES
+(6, 2, 4, 'tested', '2023-11-16 07:58:48');
+INSERT INTO `comments` (`comment_id`, `user_id`, `img_id`, `content`, `comment_create_date`) VALUES
+(7, 2, 4, 'tested', '2023-11-16 12:49:48'),
+(8, 2, 4, 'tested', '2023-11-16 13:21:45');
+
+INSERT INTO `images` (`img_id`, `user_id`, `img_create_date`, `img_title`, `img_url`, `img_description`) VALUES
+(4, 2, '2023-11-11 13:09:28', 'test', 'abcxsacsa', 'can this be successful');
+INSERT INTO `images` (`img_id`, `user_id`, `img_create_date`, `img_title`, `img_url`, `img_description`) VALUES
+(5, 2, '2023-11-11 17:14:53', 'test', 'abcxsacsa', 'can this be successful');
+INSERT INTO `images` (`img_id`, `user_id`, `img_create_date`, `img_title`, `img_url`, `img_description`) VALUES
+(6, 2, '2023-11-13 09:39:20', 'test', 'abcxsacsa', 'can this be successful');
+INSERT INTO `images` (`img_id`, `user_id`, `img_create_date`, `img_title`, `img_url`, `img_description`) VALUES
+(8, 2, '2023-11-16 13:16:51', 'test', 'C:\\Users\\kuuha\\Desktop\\Cybersoft\\back-end\\baiTap\\capstone_picture\\public\\img\\1700140610853_avatar_the_way_of_water.jpg', 'day la buoc test');
 
 
 
-
-
-
-
+INSERT INTO `users` (`user_id`, `user_fullname`, `user_email`, `user_phone`, `age`, `user_password`, `user_avatar`, `user_role`) VALUES
+(2, 'le tuan kiet', 'kietle9a7@gmail.com', '08321312321321', 24, '$2b$10$SEpMVYMb9xd.6uLefvCrduM4UOxMTBFOnmg5Nm4159iL0Z2NLSJ5e', 'text', 'user');
+INSERT INTO `users` (`user_id`, `user_fullname`, `user_email`, `user_phone`, `age`, `user_password`, `user_avatar`, `user_role`) VALUES
+(3, 'KIEt', 'kietle9a78@gmail.com', '08321312321321', 24, '$2b$10$iDDQyfTnQ8McBFGBMdJY7eKlbn9iD7paLDqu2mKqBW.wOfLqjcLKu', 'text', 'user');
 
 
 
