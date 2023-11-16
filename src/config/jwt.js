@@ -9,7 +9,11 @@ const createToken = (data) => {
   return token;
 };
 const checkToken = (data) => {
-  return jwt.verify(data, config.secret_string);
+  return jwt.verify(data, config.secret_string, function (err, decoded) {
+    if (err) {
+      return 401;
+    }
+  });
 };
 const decodeToken = (data) => {
   return jwt.decode(data);

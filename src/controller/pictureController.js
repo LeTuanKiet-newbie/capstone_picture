@@ -1,25 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-import validator from "validator";
-import { decodeToken, checkToken } from "../config/jwt.js";
+import { decodeToken } from "../config/jwt.js";
+import { checkTokenExist } from "../middleware/handler.js";
 
 const prisma = new PrismaClient();
+
 const getPicture = async (req, res) => {
   try {
-    const images = await prisma.images.findMany();
-    if (images) {
-      res.send(images);
-    } else {
-      res.status(400).send("None picture!");
+    const { token } = await req.headers;
+    if (token) {
+      if (checkTokenExist(req) === 401) {
+        return res
+          .status(checkTokenExist(req))
+          .send({ message: "Unauthorized!" });
+      }
     }
+
+    const images = await prisma.images.findMany();
+    if (!images) {
+      return res.status(404).send({ message: "Not Found!" });
+    }
+    res.status(200).send(images);
   } catch (err) {
-    console.log(err);
-    res.status(400).send("loi!");
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
-const findImg = async (req, res) => {
+const findImgByName = async (req, res) => {
   try {
-    const { keyword } = req.query;
+    const { token } = await req.headers;
+    if (token) {
+      if (checkTokenExist(req) === 401) {
+        return res.status(401).send({ message: "Unauthorized!" });
+      }
+    }
+    const { keyword } = await req.query;
     const images = await prisma.images.findMany({
       where: {
         img_title: {
@@ -28,154 +42,170 @@ const findImg = async (req, res) => {
       },
     });
     if (!images.length) {
-      return res.status(404).send("khong thay");
+      return res.status(404).send({ message: "Not Found!" });
     }
-    res.send(images);
+    res.status(200).send(images);
   } catch (e) {
-    res.status(500).send("network err");
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
-const infoUser = async (req, res) => {
-  const imgId = parseInt(req.params.id);
+const getUserInfoByImg = async (req, res) => {
+  try {
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req) === 401) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const img_id = await Number(req.params.img_id);
 
-  const imageInfo = await prisma.save_image.findUnique({
-    where: {
-      save_img_id: imgId,
-    },
-    include: {
-      users: true,
-    },
-  });
-  if (imageInfo) {
-    res.send(imageInfo);
-  } else {
-    res.status(404).send("Không tìm thấy ảnh");
-  }
-};
-const infoComment = async (req, res) => {
-  const imgId = parseInt(req.image.id);
-
-  const imageInfo = await prisma.images.findMany({
-    where: {
-      img_id: imgId,
-    },
-    include: {
-      comments: {
-        select: {
-          content: true,
+    const image = await prisma.images.findFirst({
+      where: {
+        img_id,
+      },
+      include: {
+        users: {
+          select: {
+            user_fullname: true,
+            user_email: true,
+            user_phone: true,
+            user_avatar: true,
+          },
         },
       },
-    },
-  });
-  res.send(imageInfo);
+    });
+    if (!image) {
+      return res.status(404).send({ message: "Not Found!" });
+    }
+    const user = image.users;
+
+    res.status(200).send(user);
+  } catch {
+    res.status(500).send({ message: "No internet!" });
+  }
+};
+
+const getCommentsByImageId = async (req, res) => {
+  try {
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req) === 401) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const img_id = await Number(req.params.img_id);
+
+    const arrComments = await prisma.comments.findMany({
+      where: {
+        img_id,
+      },
+      include: {
+        users: {
+          select: {
+            user_fullname: true,
+          },
+        },
+      },
+    });
+    res.send(arrComments);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ message: "Bad Connection!" });
+  }
 };
 
 const checkSaveImg = async (req, res) => {
   try {
-    const imgId = parseInt(req.params.id);
-    const { token } = req.headers;
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req) === 401) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const img_id = await Number(req.params.img_id);
+
     const userInfo = decodeToken(token);
     const { user_id } = userInfo.data;
 
-    const saveImg = await prisma.save_image.findUnique({
+    const saveImg = await prisma.save_image.findFirst({
       where: {
         user_id,
-        img_id: imgId,
+        img_id,
       },
     });
     if (saveImg) {
-      res.send({ saved: true });
+      res.status(200).send({ saved: true });
     } else {
-      res.send({ saved: false });
+      res.status(200).send({ saved: false });
     }
   } catch (err) {
     console.log(err);
-    res.send("Lỗi sever");
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
-const comments = async (req, res) => {
+const createComment = async (req, res) => {
   try {
-    let { content } = req.body;
-    let { img_id } = parseInt(req.params);
-    let { token } = req.headers;
-    const checkedToken = checkToken(token);
-    if (!checkedToken) {
-      return;
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req) === 401) {
+      return res.status(401).send({ message: "Unauthorized!" });
     }
-    let userInfo = decodeToken(token);
-    let { user_id } = userInfo.data;
+    const { content } = await req.body;
+    if (!content) {
+      return res
+        .status(400)
+        .send({ message: "You need to type in a comment to post it!" });
+    }
+    const img_id = await Number(req.params.img_id);
+    const userInfo = decodeToken(token);
+    const { user_id } = userInfo.data;
 
-    let newData = {
+    const newData = {
       user_id,
       img_id,
       content,
       comment_create_date: new Date(),
     };
     await prisma.comments.create({ data: newData });
-    res.status(201).send("oke la");
+    res.status(201).send("Comment created!");
   } catch (e) {
-    res.status(500).send("chua dang nhap");
-    console.log(e);
-  }
-};
-
-const lstSave = async (req, res) => {
-  const { token } = req.headers;
-  const userInfo = decodeToken(token);
-  const user_id = userInfo.data.checkEmail;
-  const save_Img = await prisma.save_image.findMany({
-    where: {
-      user_id: user_id,
-    },
-    include: {
-      images: true,
-    },
-  });
-  const save = save_Img.map((item) => item.image);
-  res.send(save);
-};
-
-const lstCreatedImg = async (req, res) => {
-  try {
-    const { token } = req.headers;
-    const userInfo = decodeToken(token);
-    const user_id = userInfo.data.checkEmail;
-
-    const save_Img = await prisma.images.findMany({
-      where: {
-        user_id,
-      },
-    });
-
-    res.send(save_Img);
-  } catch (e) {
-    res.status(400).send("err");
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
 const deleteImg = async (req, res) => {
-  const { imgId } = parseInt(req.params.id);
-  const { token } = req.headers;
-  const userInfo = decodeToken(token);
-  const { user_id } = userInfo.data.checkEmail;
+  try {
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req) === 401) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const img_id = await Number(req.params.img_id);
+    const userInfo = decodeToken(token);
+    const { user_id } = userInfo.data;
 
-  const isUserImg = await prisma.image.findFirst({
-    where: {
-      img_id: imgId,
-      user_id: user_id,
-    },
-  });
-  if (isUserImg) {
-    await prisma.image.delete({
+    const isUserImg = await prisma.images.findFirst({
       where: {
-        img_id: imgId,
+        img_id,
+        user_id,
       },
     });
-    res.send("oke");
-  } else {
-    res.send("don't have permison");
+    if (!isUserImg) {
+      return res.status(404).send({ message: "Not Found!" });
+    }
+    await prisma.comments.deleteMany({
+      where: {
+        img_id,
+      },
+    });
+    await prisma.save_image.deleteMany({
+      where: {
+        img_id,
+      },
+    });
+    await prisma.images.delete({
+      where: {
+        img_id,
+      },
+    });
+    res.status(200).send("Deleted!");
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
@@ -183,22 +213,21 @@ const addPicture = async (req, res) => {
   try {
     const { token } = await req.headers;
 
-    const checkValidToken = checkToken(token);
-
-    if (!checkValidToken) {
+    if (!token || checkTokenExist(req) === 401) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
 
     const user = await decodeToken(token).data;
 
-    const { img_url, img_title, img_description } = await req.body;
+    const file = await req.file;
+    const { img_title, img_description } = await req.body;
+    console.log(file);
 
     const newPicture = {
       user_id: user.user_id,
       img_create_date: new Date(),
       img_title,
-      img_url,
-      img_title,
+      img_url: file.path,
       img_description,
     };
 
@@ -214,13 +243,11 @@ const addPicture = async (req, res) => {
 };
 export {
   deleteImg,
-  lstCreatedImg,
-  lstSave,
-  comments,
+  createComment,
   checkSaveImg,
-  infoComment,
+  getCommentsByImageId,
   getPicture,
-  findImg,
-  infoUser,
+  findImgByName,
+  getUserInfoByImg,
   addPicture,
 };
