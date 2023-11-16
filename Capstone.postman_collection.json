@@ -1,0 +1,428 @@
+{
+	"info": {
+		"_postman_id": "d8a4d63c-6ad2-47ff-9a6d-9a29c6753a0c",
+		"name": "Capstone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29927206"
+	},
+	"item": [
+		{
+			"name": "createUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_fullname\": \"KIEt\",\r\n    \"age\": 24.4,\r\n    \"user_email\": \"kietle9a78@gmail.com\",\r\n    \"user_phone\": \"08321312321321\",\r\n    \"user_password\": \"sadasdsace\",\r\n    \"user_avatar\": \"text\",\r\n    \"user_role\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/user/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "loginUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_email\": \"kietle9a7@gmail.com\",\r\n    \"user_password\": \"sadasdsace\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/user/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJLSUV0IiwidXNlcl9lbWFpbCI6ImtpZXRsZTlhN0BnbWFpbC5jb20iLCJ1c2VyX3Bob25lIjoiMDgzMjEzMTIzMjEzMjEiLCJhZ2UiOjI0LCJ1c2VyX3Bhc3N3b3JkIjoiJDJiJDEwJFNFcE1WWU1iOXhkLjZ1TGVmdkNyZHVNNFVPeE1UQkZPbm1nNU5tNDE1OWlMMFoyTkxTSjVlIiwidXNlcl9hdmF0YXIiOiJ0ZXh0IiwidXNlcl9yb2xlIjoidXNlciJ9LCJpYXQiOjE2OTk4NTQzOTEsImV4cCI6MTcwNTAzODM5MX0.i79UXX5Lyl4BYbHvJqPDICh9BciD0U7ogs39x1kH2do",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_fullname\": \"Kiet\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/user/update",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addPicture",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDAzNTMyOSwiZXhwIjoxNzA1MjE5MzI5fQ.7rSL2fVQo2lbfXlkGhrFaDU9qg1kWn7WJVspX0ghh7I",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/C:/Users/kuuha/Downloads/11-[tai_lieu]-typescript.pdf"
+						},
+						{
+							"key": "img_description",
+							"value": "day la buoc test",
+							"type": "text"
+						},
+						{
+							"key": "img_title",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/picture/addpicture",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"addpicture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserInfoByImgId",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/picture/get-info/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"get-info",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllPictures",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJLSUV0IiwidXNlcl9lbWFpbCI6ImtpZXRsZTlhN0BnbWFpbC5jb20iLCJ1c2VyX3Bob25lIjoiMDgzMjEzMTIzMjEzMjEiLCJhZ2UiOjI0LCJ1c2VyX3Bhc3N3b3JkIjoiJDJiJDEwJFNFcE1WWU1iOXhkLjZ1TGVmdkNyZHVNNFVPeE1UQkZPbm1nNU5tNDE1OWlMMFoyTkxTSjVlIiwidXNlcl9hdmF0YXIiOiJ0ZXh0IiwidXNlcl9yb2xlIjoidXNlciJ9LCJpYXQiOjE2OTk4NTQzOTEsImV4cCI6MTcwNTAzODM5MX0.i79UXX5Lyl4BYbHvJqPDICh9BciD0U7ogs39x1kH2do",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/picture/get-picture",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"get-picture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCommentsByImgId",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/picture/get-comment/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"get-comment",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checkSavedOrNot",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDExOTczOSwiZXhwIjoxNzA1MzAzNzM5fQ.XC5U2BSlHMbuaVOj4_Jj-xs0mqWC3EvIdpv4akHzImk",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/picture/saved/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"saved",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createComment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDExOTczOSwiZXhwIjoxNzA1MzAzNzM5fQ.XC5U2BSlHMbuaVOj4_Jj-xs0mqWC3EvIdpv4akHzImk",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"tested\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/picture/create-comment/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"create-comment",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listCreatedImg",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/user/list-created-img",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"list-created-img"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listSavedImg",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/user/list-saved-img",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"list-saved-img"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deteleImg",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDExOTczOSwiZXhwIjoxNzA1MzAzNzM5fQ.XC5U2BSlHMbuaVOj4_Jj-xs0mqWC3EvIdpv4akHzImk",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/picture/delete/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"delete",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserInfo",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/user/info",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchImageByName",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJfaWQiOjIsInVzZXJfZnVsbG5hbWUiOiJsZSB0dWFuIGtpZXQiLCJ1c2VyX2VtYWlsIjoia2lldGxlOWE3QGdtYWlsLmNvbSIsInVzZXJfcGhvbmUiOiIwODMyMTMxMjMyMTMyMSIsImFnZSI6MjQsInVzZXJfcGFzc3dvcmQiOiIkMmIkMTAkU0VwTVZZTWI5eGQuNnVMZWZ2Q3JkdU00VU94TVRCRk9ubWc1Tm00MTU5aUwwWjJOTFNKNWUiLCJ1c2VyX2F2YXRhciI6InRleHQiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0sImlhdCI6MTcwMDEzODY2OCwiZXhwIjoxNzA1MzIyNjY4fQ.1NvpXQ_4thtef5LZDgYix969gdbVy7fWDNblwsuj84Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/picture/search?keyword=test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"picture",
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

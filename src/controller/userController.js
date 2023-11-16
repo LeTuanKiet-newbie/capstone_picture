@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client"; //dung de query
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { checkToken, createToken, decodeToken } from "../config/jwt.js";
+import { createToken, decodeToken } from "../config/jwt.js";
+import { checkTokenExist } from "../middleware/handler.js";
 
 const prisma = new PrismaClient();
 
@@ -77,9 +78,7 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { token } = await req.headers;
-
-    const checkLegitToken = checkToken(token);
-    if (!checkLegitToken) {
+    if (!token || checkTokenExist(req) === 401) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
     const user = decodeToken(token).data;
@@ -100,36 +99,73 @@ const updateUser = async (req, res) => {
 const getUserInfo = async (req, res) => {
   try {
     const { token } = await req.headers;
-    const tokenValid = checkToken(token);
-    if (!tokenValid) {
+    if (!token || checkTokenExist(req) === 401) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
-    const img_id = Number(req.params.img_id);
 
-    const image = await prisma.images.findFirst({
-      where: {
-        img_id,
-      },
-      include: {
-        users: {
-          select: {
-            user_fullname: true,
-            user_email: true,
-            user_phone: true,
-            user_avatar: true,
-          },
-        },
-      },
-    });
-    if (!image) {
-      return res.status(404).send({ message: "Not Found!" });
-    }
-    const user = image.users;
-
+    const user = decodeToken(token).data;
+    delete user.user_password;
     res.status(200).send(user);
-  } catch {
-    res.status(500).send({ message: "No internet!" });
+  } catch (e) {
+    res.status(500).send({ message: "Bad Connection!" });
   }
 };
 
-export { createUser, loginUser, updateUser, getUserInfo };
+const listSaved = async (req, res) => {
+  try {
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req)) {
+      res.status(401).send({ message: "Unauthorized!" });
+    }
+    const userInfo = decodeToken(token);
+    const { user_id } = userInfo.data;
+    const save_Img = await prisma.save_image.findMany({
+      where: {
+        user_id: user_id,
+      },
+      include: {
+        images: true,
+      },
+    });
+    if (!save_Img.length) {
+      return res
+        .status(404)
+        .send({ message: "You haven't saved any pictures!" });
+    }
+    res.send(save_Img);
+  } catch (e) {
+    res.status(500).send({ message: "Bad Connection!" });
+  }
+};
+
+const listCreatedImg = async (req, res) => {
+  try {
+    const { token } = await req.headers;
+    if (!token || checkTokenExist(req)) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    const { user_id } = decodeToken(token).data;
+
+    const listImgs = await prisma.images.findMany({
+      where: {
+        user_id,
+      },
+    });
+    if (!listImgs.length) {
+      return res
+        .status(404)
+        .send({ message: "You haven't added any pictures!" });
+    }
+    res.status(200).send(listImgs);
+  } catch (e) {
+    res.status(500).send({ message: "Bad Connection!" });
+  }
+};
+export {
+  createUser,
+  loginUser,
+  updateUser,
+  listCreatedImg,
+  listSaved,
+  getUserInfo,
+};

@@ -1,8 +1,26 @@
 import express from "express";
-import { addPicture } from "../controller/pictureController.js";
+import {
+  createComment,
+  findImgByName,
+  getPicture,
+  checkSaveImg,
+  deleteImg,
+  addPicture,
+  getCommentsByImageId,
+  getUserInfoByImg,
+} from "../controller/pictureController.js";
+import { handleUpload } from "../middleware/handler.js";
+import { upload } from "../controller/uploadController.js";
+const picRoute = express.Router();
 
-const pictureRoute = express.Router();
+picRoute.get("/get-picture", getPicture);
+picRoute.post("/addpicture", upload.single("avatar"), handleUpload, addPicture);
+picRoute.delete("/delete/:img_id", deleteImg);
+picRoute.get("/search", findImgByName);
 
-pictureRoute.post("/addpicture", addPicture);
+picRoute.get("/get-info/:img_id", getUserInfoByImg);
+picRoute.get("/saved/:img_id", checkSaveImg);
 
-export default pictureRoute;
+picRoute.post("/create-comment/:img_id", createComment);
+picRoute.get("/get-comment/:img_id", getCommentsByImageId);
+export default picRoute;
